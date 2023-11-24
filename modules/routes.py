@@ -58,8 +58,8 @@ def homepage():
 
 # ...
 
-@app.route('/resultado', methods=['POST'])
-def resultadoPage():
+@app.route('/rest', methods=['POST'])
+def restPage():
     classificador = request.form.get('classificador')
     parametro = int(request.form.get('parametro'))
 
@@ -106,4 +106,4 @@ def resultadoPage():
     y_test_list = y_test.tolist()
     y_pred_list = model.predict(X_test).tolist()
 
-    return render_template("resultado.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix, X_test=X_test_list, y_test=y_test_list, y_pred=y_pred_list)
+    return render_template("rest.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix, X_test=X_test_list, y_test=y_test_list, y_pred=y_pred_list)
