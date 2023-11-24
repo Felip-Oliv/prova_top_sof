@@ -56,9 +56,8 @@ def homepage():
 
 @app.route('/resultado', methods=['POST'])
 def resultadoPage():
-    #     lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3'
-# ]
-    # dataset = dataset.drop(columns = lista_colunas_removidas)
+    lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3']
+    dataset.drop(columns=lista_colunas_removidas, inplace=True)
     dataset2 = pd.DataFrame.copy(dataset)
     dataset2['sex'].unique()
     dataset2['sex'].replace({'F':0, 'M': 1}, inplace=True)
@@ -81,10 +80,11 @@ def resultadoPage():
     classificador = request.form.get('classificador')
     parametro = int(request.form.get('parametro'))
     # Separando as features e o alvo
-    previsores = dataset.iloc[:, 0:17].values
-    alvo = dataset.iloc[:, 16].values
+    previsores = dataset2.iloc[:, 0:17].values
+    alvo = dataset2.iloc[:, 16].values
+
     # Feita a separação entre os dados treinados e testados
-    X_train, X_test, y_train, y_test = train_test_split(previsores, alvo, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(previsores, alvo, test_size = 0.30, random_state = 42)
 
     if classificador == "KNN":
         tituloClassificador = "K-Nearest Neighbor"
