@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+
 from modules import app
 from sklearn.svm import SVC
 from flask import render_template, request
@@ -13,7 +14,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 
 path = os.path.abspath(os.path.dirname(__file__))
-csv_url = f'{path}/data/student.csv'
+csv_url = f'{path}/data/heart_tratado.csv'
 dataset = pd.read_csv(csv_url, sep=';', nrows=5000)
 
 
@@ -54,37 +55,21 @@ def homepage():
         tituloClassificador=tituloClassificador
     )
 
+# ...
+
+# ...
+
 @app.route('/resultado', methods=['POST'])
 def resultadoPage():
-    lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3']
-    dataset.drop(columns=lista_colunas_removidas, inplace=True)
-    dataset2 = pd.DataFrame.copy(dataset)
-    dataset2['sex'].unique()
-    dataset2['sex'].replace({'F':0, 'M': 1}, inplace=True)
-    dataset2['address'].unique()
-    dataset2['address'].replace({'U':0, 'R': 1}, inplace=True)
-    dataset2['Pstatus'].unique()
-    dataset2['Pstatus'].replace({'A':0, 'T': 1}, inplace=True)
-    dataset2['guardian'].unique()
-    dataset2['guardian'].replace({'mother':0, 'father': 1, 'other':2}, inplace=True)
-    dataset2['famsup'].unique()
-    dataset2['famsup'].replace({'no':0, 'yes': 1}, inplace=True)
-    dataset2['activities'].unique()
-    dataset2['activities'].replace({'no':0, 'yes': 1}, inplace=True)
-    dataset2['higher'].unique()
-    dataset2['higher'].replace({'yes':0, 'no': 1}, inplace=True)
-    dataset2['internet'].unique()
-    dataset2['internet'].replace({'no':0, 'yes': 1}, inplace=True)
-    dataset2['romantic'].unique()
-    dataset2['romantic'].replace({'no':0, 'yes': 1}, inplace=True)
     classificador = request.form.get('classificador')
     parametro = int(request.form.get('parametro'))
+
     # Separando as features e o alvo
-    previsores = dataset2.iloc[:, 0:17].values
-    alvo = dataset2.iloc[:, 16].values
+    X = dataset[['Age', 'Cholesterol', 'HeartDisease']].median().astype(int)
+    y = (dataset['MaxHR'] > dataset['Oldpeak'].median()).astype(int)
 
     # Feita a separação entre os dados treinados e testados
-    X_train, X_test, y_train, y_test = train_test_split(previsores, alvo, test_size = 0.30, random_state = 42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     if classificador == "KNN":
         tituloClassificador = "K-Nearest Neighbor"
@@ -109,18 +94,17 @@ def resultadoPage():
     # Treinando a classificação escolhida
     model.fit(X_train, y_train)
 
-    # Tentando realizar previsões
-    y_pred = model.predict(X_test)
+    # Aqui gera a matriz de confusão
+    conf_matrix = confusion_matrix(y_test, model.predict(X_test))
 
-    #Aqui gera a matrix de confusão
-    conf_matrix = confusion_matrix(y_test, y_pred)
+    accuracy = accuracy_score(y_test, model.predict(X_test))
+    precision = precision_score(y_test, model.predict(X_test))
+    recall = recall_score(y_test, model.predict(X_test))
+    f1 = f1_score(y_test, model.predict(X_test))
 
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
+    # Convertendo arrays numpy para listas
+    X_test_list = X_test.values.tolist()
+    y_test_list = y_test.tolist()
+    y_pred_list = model.predict(X_test).tolist()
 
-    return render_template("res.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix)
-
-
-    
+    return render_template("resultado.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix, X_test=X_test_list, y_test=y_test_list, y_pred=y_pred_list)
