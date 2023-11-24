@@ -80,12 +80,13 @@ def resultadoPage():
     dataset2['internet'].unique()
     dataset2['internet'].replace({'no':0, 'yes': 1}, inplace=True)
     dataset2['romantic'].unique()
+    dataset2['romantic'].replace({'no':0, 'yes': 1}, inplace=True)
+    
     # Separando as features e o alvo
-    X = dataset[['IDADE', 'NOTA_CN', 'NOTA_CH', 'NOTA_LC', 'NOTA_MT', 'NOTA_COMP1', 'NOTA_COMP2', 'NOTA_COMP3', 'NOTA_COMP4', 'NOTA_COMP5']]
-    y = (dataset['NOTA_REDACAO'] > dataset['NOTA_REDACAO'].median()).astype(int)
-
+    previsores = dataset2.iloc[:, 0:17].values
+    alvo = dataset2.iloc[:, 16].values
     # Feita a separação entre os dados treinados e testados
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(previsores, alvo, test_size=0.2, random_state=42)
 
     if classificador == "KNN":
         tituloClassificador = "K-Nearest Neighbor"
