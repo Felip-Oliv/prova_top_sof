@@ -65,8 +65,8 @@ def resultadoPage():
     parametro = int(request.form.get('parametro'))
 
     # Separando as features e o alvo
-    X = dataset[['Age', 'Cholesterol', 'HeartDisease']].median().astype(int)
-    y = (dataset['MaxHR'] > dataset['Oldpeak'].median()).astype(int)
+    X = dataset[['Age','RestingBP', 'FastingBS', 'Oldpeak', 'HeartDisease']]
+    y = (dataset['MaxHR'] > dataset['MaxHR'].median()).astype(int)
 
     # Feita a separação entre os dados treinados e testados
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
