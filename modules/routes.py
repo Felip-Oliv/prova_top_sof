@@ -14,7 +14,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 
 path = os.path.abspath(os.path.dirname(__file__))
-csv_url = f'{path}/data/notas_enem.csv'
+csv_url = f'{path}/data/estudent.csv'
 dataset = pd.read_csv(csv_url, sep=';', nrows=5000)
 
 
@@ -59,7 +59,27 @@ def homepage():
 def resultadoPage():
     classificador = request.form.get('classificador')
     parametro = int(request.form.get('parametro'))
-
+    lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3'
+]
+    dataset = dataset.drop(columns = lista_colunas_removidas)
+    dataset2 = pd.DataFrame.copy(dataset)
+    dataset2['sex'].unique()
+    dataset2['sex'].replace({'F':0, 'M': 1}, inplace=True)
+    dataset2['address'].unique()
+    dataset2['address'].replace({'U':0, 'R': 1}, inplace=True)
+    dataset2['Pstatus'].unique()
+    dataset2['Pstatus'].replace({'A':0, 'T': 1}, inplace=True)
+    dataset2['guardian'].unique()
+    dataset2['guardian'].replace({'mother':0, 'father': 1, 'other':2}, inplace=True)
+    dataset2['famsup'].unique()
+    dataset2['famsup'].replace({'no':0, 'yes': 1}, inplace=True)
+    dataset2['activities'].unique()
+    dataset2['activities'].replace({'no':0, 'yes': 1}, inplace=True)
+    dataset2['higher'].unique()
+    dataset2['higher'].replace({'yes':0, 'no': 1}, inplace=True)
+    dataset2['internet'].unique()
+    dataset2['internet'].replace({'no':0, 'yes': 1}, inplace=True)
+    dataset2['romantic'].unique()
     # Separando as features e o alvo
     X = dataset[['IDADE', 'NOTA_CN', 'NOTA_CH', 'NOTA_LC', 'NOTA_MT', 'NOTA_COMP1', 'NOTA_COMP2', 'NOTA_COMP3', 'NOTA_COMP4', 'NOTA_COMP5']]
     y = (dataset['NOTA_REDACAO'] > dataset['NOTA_REDACAO'].median()).astype(int)
