@@ -1,6 +1,8 @@
 import os
 import pandas as pd
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from modules import app
 from sklearn.svm import SVC
 from flask import render_template, request
@@ -8,9 +10,6 @@ from sklearn.metrics import confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
 path = os.path.abspath(os.path.dirname(__file__))
@@ -20,7 +19,7 @@ dataset = pd.read_csv(csv_url, sep=';', nrows=5000)
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
-    apresentar_campos = False
+    _campos = False
     texto_paremtro = ""
     tituloClassificador = ""
     classificador = ""
@@ -28,9 +27,9 @@ def homepage():
     if request.method == 'POST':
         classificador = request.form.get('classificador')
 
-        apresentar_campos = classificador in ["KNN", "MLP", "DT", "SVM", "RF"]
+        _campos = classificador in ["KNN", "MLP", "DT", "SVM", "RF"]
 
-        if apresentar_campos:
+        if _campos:
             if classificador == "KNN":
                 tituloClassificador = "K-Nearest Neighbors"
                 texto_paremtro = "Selecione um valor para: n_neighbors"
@@ -49,7 +48,7 @@ def homepage():
 
     return render_template(
         'home.html',
-        apresentar_campos=apresentar_campos,
+        _campos=_campos,
         texto_paremtro=texto_paremtro,
         classificador=classificador,
         tituloClassificador=tituloClassificador
