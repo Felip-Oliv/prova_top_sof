@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container mt-5">
+
+    <h1 class="mb-4">Prova de Python</h1>
+    <form action="/" method="POST" class="mb-4">
+        <div class="mb-3">
+            <label for="classificador" class="form-label">Escolha um classificador que deseja utilizar:</label>
+            <select class="form-select" name="classificador" id="classificador">
+                <option value=""></option>
+                <option value="MLP">Multilayer Perceptron</option>
+                <option value="DT">Decision Tree</option>
+                <option value="SVM">Support Vector Machine</option>
+                <option value="RF">Random Forest</option>
+                <option value="KNN">K-Nearest Neighbors</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Classificador escolhido</button>
+    </form>
+
+    {% if apresentar_campos %}
+    <form action="/resultado" method="POST">
+        <div>
+            <label for="dados" class="form-label"><b>{{tituloClassificador}}</b></label>
+
+            {% if classificador == "KNN" %}
+            <div class="mb-3">
+                <label for="parametro" class="form-label">{{texto_paremtro}}</label>
+                <select class="form-select" name="parametro" id="parametro">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+            </div>
+            {% endif %}
+
+            {% if classificador == "RF" %}
+            <div class="mb-3">
+                <label for="parametro" class="form-label">{{texto_paremtro}}</label>
+                <select class="form-select" name="parametro" id="parametro">
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                </select>
+            </div>
+            {% endif %}
+
+            {% if classificador == "DT" %}
+            <div class="mb-3">
+                <label for="parametro" class="form-label">{{texto_paremtro}}</label>
+                <select class="form-select" name="parametro" id="parametro">
+                    <option value="2">2</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            {% endif %}
+
+            {% if classificador == "MLP" %}
+            <div class="mb-3">
+                <label for="parametro" class="form-label">{{texto_paremtro}}</label>
+                <select class="form-select" name="parametro" id="parametro">
+                    <option value="5">5</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            {% endif %}
+
+            {% if classificador == "SVM" %}
+            <div class="mb-3">
+                <label for="parametro" class="form-label">{{texto_paremtro}}</label>
+                <select class="form-select" name="parametro" id="parametro">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="7">7</option>
+                    <option value="9">9</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <input type="hidden" name="classificador" value="{{ classificador }}">
+            
+            <button type="submit" class="btn btn-primary">Apresentar Resultado</button>
+        </div>
+    </form>
+    {% endif %}
+    <div>
+    </div>
+</body>
+
+</html
