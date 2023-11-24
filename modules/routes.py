@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-
 from modules import app
 from sklearn.svm import SVC
 from flask import render_template, request
@@ -14,7 +13,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 
 path = os.path.abspath(os.path.dirname(__file__))
-csv_url = f'{path}/data/estudent.csv'
+csv_url = f'{path}/data/student.csv'
 dataset = pd.read_csv(csv_url, sep=';', nrows=5000)
 
 
