@@ -56,11 +56,9 @@ def homepage():
 
 @app.route('/resultado', methods=['POST'])
 def resultadoPage():
-    classificador = request.form.get('classificador')
-    parametro = int(request.form.get('parametro'))
-    lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3'
-]
-    dataset = dataset.drop(columns = lista_colunas_removidas)
+    #     lista_colunas_removidas = ['school','Medu', 'Fedu', 'famsize', 'Mjob', 'Fjob', 'reason', 'traveltime', 'schoolsup', 'paid', 'nursery', 'freetime', 'absences', 'G1', 'G2', 'G3'
+# ]
+    # dataset = dataset.drop(columns = lista_colunas_removidas)
     dataset2 = pd.DataFrame.copy(dataset)
     dataset2['sex'].unique()
     dataset2['sex'].replace({'F':0, 'M': 1}, inplace=True)
@@ -80,10 +78,11 @@ def resultadoPage():
     dataset2['internet'].replace({'no':0, 'yes': 1}, inplace=True)
     dataset2['romantic'].unique()
     dataset2['romantic'].replace({'no':0, 'yes': 1}, inplace=True)
-    
+    classificador = request.form.get('classificador')
+    parametro = int(request.form.get('parametro'))
     # Separando as features e o alvo
-    previsores = dataset2.iloc[:, 0:17].values
-    alvo = dataset2.iloc[:, 16].values
+    previsores = dataset.iloc[:, 0:17].values
+    alvo = dataset.iloc[:, 16].values
     # Feita a separação entre os dados treinados e testados
     X_train, X_test, y_train, y_test = train_test_split(previsores, alvo, test_size=0.2, random_state=42)
 
@@ -121,7 +120,7 @@ def resultadoPage():
     recall = recall_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred)
 
-    return render_template("resultado.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix)
+    return render_template("res.html", accuracy=accuracy, precision=precision, recall=recall, f1=f1, tituloClassificador=tituloClassificador, conf_matrix=conf_matrix)
 
 
     
